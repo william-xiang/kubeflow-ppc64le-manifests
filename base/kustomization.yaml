@@ -128,11 +128,11 @@ images:
   newName: quay.io/rocketaihub/viewer-crd-controller
   newTag: v1.8.0
 - name: gcr.io/ml-pipeline/visualization-server
-  newName: quay.io/rocketaihub/visualization-server
-  newTag: v1.8.0
+  newName: quay.io/ibm/kubeflow-visualization-server-ppc64le
+  newTag: 1.8.1
 - name: gcr.io/ml-pipeline/metadata-writer
   newName: quay.io/rocketaihub/metadata-writer
-  newTag: v1.8.0
+  newTag: vtest1
 - name: gcr.io/ml-pipeline/cache-server
   newName: quay.io/rocketaihub/kubeflow-cache-server-ppc64le
   newTag: 2.0.0-alpha.7
