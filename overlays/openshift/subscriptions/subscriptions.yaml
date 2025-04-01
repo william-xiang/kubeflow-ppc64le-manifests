@@ -88,5 +88,5 @@ spec:
   channel: v4
   installPlanApproval: Automatic
   name: grafana-operator
-  source: community-operators
+  source: community-operators-4.15
   sourceNamespace: openshift-marketplace

@@ -1,0 +1,197 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    app.kubernetes.io/part-of: kubeflow
+  name: grafana
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    app.kubernetes.io/part-of: kubeflow
+  name: namespace-configuration-operator
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    app.kubernetes.io/part-of: kubeflow
+  name: openshift-nfd
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    app.kubernetes.io/part-of: kubeflow
+  name: openshift-operators-redhat
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  generateName: grafana-
+  labels:
+    app.kubernetes.io/part-of: kubeflow
+  name: grafana
+  namespace: grafana
+spec:
+  targetNamespaces:
+  - grafana
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  annotations:
+    olm.providedAPIs: GroupConfig.v1alpha1.redhatcop.redhat.io,NamespaceConfig.v1alpha1.redhatcop.redhat.io,UserConfig.v1alpha1.redhatcop.redhat.io
+  labels:
+    app.kubernetes.io/part-of: kubeflow
+  name: namespace-configuration-operator
+  namespace: namespace-configuration-operator
+spec: {}
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  generateName: openshift-nfd-
+  labels:
+    app.kubernetes.io/part-of: kubeflow
+  name: openshift-nfd
+  namespace: openshift-nfd
+spec:
+  targetNamespaces:
+  - openshift-nfd
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  annotations:
+    olm.providedAPIs: Elasticsearch.v1.logging.openshift.io,Kibana.v1.logging.openshift.io
+  labels:
+    app.kubernetes.io/part-of: kubeflow
+  name: openshift-operators-redhat
+  namespace: openshift-operators-redhat
+spec: {}
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  labels:
+    app.kubernetes.io/part-of: kubeflow
+  name: community-operators-4.15
+  namespace: openshift-marketplace
+spec:
+  displayName: Community Operators 4.15
+  image: registry.redhat.io/redhat/community-operator-index:v4.15
+  publisher: IBM
+  sourceType: grpc
+  updateStrategy:
+    registryPoll:
+      interval: 45m
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  labels:
+    app.kubernetes.io/part-of: kubeflow
+    operators.coreos.com/grafana-operator.grafana: ""
+  name: grafana-operator
+  namespace: grafana
+spec:
+  channel: v4
+  installPlanApproval: Automatic
+  name: grafana-operator
+  source: community-operators-4.15
+  sourceNamespace: openshift-marketplace
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  labels:
+    app.kubernetes.io/part-of: kubeflow
+  name: kubeflow-namespaceconfiguration-subscription
+  namespace: namespace-configuration-operator
+spec:
+  channel: alpha
+  name: namespace-configuration-operator
+  source: community-operators
+  sourceNamespace: openshift-marketplace
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  labels:
+    app.kubernetes.io/part-of: kubeflow
+  name: nfd
+  namespace: openshift-nfd
+spec:
+  channel: stable
+  installPlanApproval: Automatic
+  name: nfd
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  labels:
+    app.kubernetes.io/part-of: kubeflow
+  name: kubeflow-elasticsearch-subscription
+  namespace: openshift-operators-redhat
+spec:
+  channel: stable
+  name: elasticsearch-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  labels:
+    app.kubernetes.io/part-of: kubeflow
+  name: kubeflow-jaeger-subscription
+  namespace: openshift-operators
+spec:
+  channel: stable
+  name: jaeger-product
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  labels:
+    app.kubernetes.io/part-of: kubeflow
+  name: kubeflow-kiali-subscription
+  namespace: openshift-operators
+spec:
+  channel: stable
+  name: kiali-ossm
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  labels:
+    app.kubernetes.io/part-of: kubeflow
+  name: kubeflow-servicemesh-subscription
+  namespace: openshift-operators
+spec:
+  channel: stable
+  name: servicemeshoperator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  generateName: serverless-operator-
+  labels:
+    app.kubernetes.io/part-of: kubeflow
+  name: serverless-operator
+  namespace: openshift-operators
+spec:
+  channel: stable
+  name: serverless-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
