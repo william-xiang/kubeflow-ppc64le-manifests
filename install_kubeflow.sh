@@ -269,11 +269,8 @@ case "$install_operators" in
   y|Y ) # Install Cert Manager Operator
         # See: https://cert-manager.io/docs/installation/openshift/
         # TODO: Try from OperatorHub (when Kubeflow supports higher cert-manager versions)
-	oc create namespace cert-manager
-        oc apply -n cert-manager -f https://github.com/jetstack/cert-manager/releases/download/v1.5.4/cert-manager.yaml
-        oc adm policy add-cluster-role-to-user cluster-admin system:serviceaccount:cert-manager:cert-manager
-        #oc adm policy add-cluster-role-to-user cluster-admin system:serviceaccount:cert-manager:cert-manager-webhook
-        oc adm policy add-cluster-role-to-user cluster-admin system:serviceaccount:cert-manager:cert-manager-cainjector  
+        helm repo add jetstack https://charts.jetstack.io --force-update
+        helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.5.4 --set installCRDs=true
 
         # Install subscriptions (operators from OperatorHub)
         while ! kustomize build $KUBEFLOW_KUSTOMIZE/subscriptions | awk '!/well-defined/' | oc apply -f -; do echo -e "Retrying to apply resources for Cert Manager..."; sleep 10; done
