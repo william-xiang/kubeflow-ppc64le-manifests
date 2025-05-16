@@ -286,7 +286,7 @@ case "$install_operators" in
 
         # Configure Grafana
         # Note: Prometheus comes with OpenShift out-of-the-box
-	oc apply -f $KUBEFLOW_KUSTOMIZE/grafana/enable-user-workload.yaml
+	      while ! kustomize build $KUBEFLOW_KUSTOMIZE/grafana | awk '!/well-defined/' | oc apply -f -; do echo -e "Retrying to apply resources for Grafana..."; sleep 10; done
         ;;
   * ) ;;
 esac
